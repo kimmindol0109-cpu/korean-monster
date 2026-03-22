@@ -1,0 +1,78 @@
+import random
+import time
+
+def play_ryu_game():
+    print("⚾ 코리안 몬스터 류현진의 삼진 잡기 게임 ⚾")
+    print("당신은 류현진 선수가 되어 타자를 삼진 아웃으로 돌려세워야 합니다!\n")
+
+    pitches = {"1": "포심 패스트볼", "2": "체인지업", "3": "커브", "4": "컷 패스트볼"}
+    locations = {"1": "하이 패스트볼 (높은 코스)", "2": "바깥쪽 꽉 찬 코스", "3": "몸쪽 깊은 코스", "4": "낮게 떨어지는 유인구"}
+
+    strikes = 0
+    balls = 0
+
+    while strikes < 3 and balls < 4:
+        print("-" * 30)
+        print(f"현재 볼카운트: {balls}B {strikes}S")
+        print("-" * 30)
+        
+        print("구종을 선택하세요:")
+        for k, v in pitches.items():
+            print(f"[{k}] {v}")
+        pitch_choice = input("번호 입력 (1~4): ")
+
+        print("\n코스를 선택하세요:")
+        for k, v in locations.items():
+            print(f"[{k}] {v}")
+        loc_choice = input("번호 입력 (1~4): ")
+
+        if pitch_choice not in pitches or loc_choice not in locations:
+            print("\n잘못된 입력입니다. 다시 던지세요!\n")
+            continue
+
+        selected_pitch = pitches[pitch_choice]
+        selected_loc = locations[loc_choice]
+
+        print(f"\n류현진이 와인드업을 합니다...")
+        time.sleep(1)
+        print(f"{selected_loc}(으)로 {selected_pitch}을(를) 던졌습니다!!")
+        time.sleep(1)
+
+        # 결과는 랜덤이지만, 특정 조합(예: 낮게 떨어지는 체인지업)에서 스트라이크 확률을 조금 더 높일 수 있습니다.
+        if pitch_choice == "2" and loc_choice == "4":
+            outcomes = ["스트라이크 (헛스윙)", "볼", "파울", "안타"]
+            weights = [50, 30, 15, 5] # 체인지업 유인구는 헛스윙 확률이 높음
+        else:
+            outcomes = ["스트라이크", "볼", "파울", "안타"]
+            weights = [35, 35, 20, 10]
+
+        result = random.choices(outcomes, weights=weights)[0]
+
+        if "스트라이크" in result:
+            print(f"💥 {result}!!")
+            strikes += 1
+        elif result == "볼":
+            print("💨 볼! 타자가 잘 참아냅니다.")
+            balls += 1
+        elif result == "파울":
+            print("⚾ 깡! 파울입니다.")
+            if strikes < 2:
+                strikes += 1
+        else:
+            print("💥 딱! 안타를 허용했습니다... 아쉽네요.")
+            print("\n--- 게임 오버 ---")
+            return
+
+        time.sleep(1)
+
+    print("=" * 30)
+    if strikes == 3:
+        print("🎉 KKK!!! 삼진 아웃!!! 🎉")
+        print("류현진 선수가 완벽한 피칭으로 타자를 돌려세웠습니다!")
+    elif balls == 4:
+        print("볼넷입니다. 타자가 1루로 걸어나갑니다... 다음 타자를 노려보세요.")
+    print("=" * 30)
+
+# 게임 실행
+if __name__ == "__main__":
+    play_ryu_game()
